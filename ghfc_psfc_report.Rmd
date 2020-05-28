@@ -1,0 +1,142 @@
+---
+title: "GHFC Co-op Checkin Desk Analysis"
+author: "Josh Hadro"
+date: "5/27/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(tidyverse)
+library(lubridate)
+
+df = read_csv('../logs/processed_logs.csv')
+
+df$timestamp = ymd_hms(df$timestamp, tz = 'UTC')
+
+# Filter out the sketchy first few days, and remove sketchy data for days leading up to pandemic period
+df %>%
+  filter(date > '2019-03-10',
+         date < '2020-03-16',
+         date != today()) -> df
+
+
+#all = merge(no_psfc, psfc, all = TRUE)
+all = df %>%
+  filter( id != 'NA' | str_detect(message, 'PSFC')) %>%
+  mutate(minute = floor_date(timestamp, unit = 'minute')) %>%
+  distinct(id, minute, date, message, .keep_all = TRUE) %>%
+  select(-minute)
+
+
+```
+
+## Analysis of Greene Hill Members and Park Slope Food Co-op Members
+
+
+Before the pandemic and the open shopping period prompted by the New York State "pause," the Greene Hill Food Co-op (GHFC) asked members and visitors to check in when they entered the store. This check-in is an opportunity to remind members of their standing in terms of hours worked during a given period, and also serves as means of gathering some insight about how and when the Co-op is most visited. Likewise, while visitors from the Park Slope Food Co-op (PSFC) do not check in formally in the same way that GHFC members do, we are still able to track raw counts of PSFC visits.
+
+As a result, we have a set of data that spans from mid-March 2019 (when the current iteration of the check-in desk was implemented) through mid-March 2020, when we stopped using the check-in desk for reasons of health and sanitation. The charts below show a few different ways of looking at the volume of traffic coming into the store.
+
+A note: this data reflects only what was captured -- put another way, if people did not check in at the check-in desk or mis-entered their data, then those statistics would not, by definition, be captured here. That said, I have no reason to believe the figures here are under-representative in any significant way. 
+
+
+## Shoppers per day
+
+The following figure shows the number of shoppers for every day from mid-March 2019 to mid-March 2020. Each dot represents the total number of check-ins on a single day. Although there is some amount of variation, the average remains relatively consistent throughout the time series. There is what seems to be an overall uptick in shopping starting after the 2019 holiday period continuing through the end of the data period, although at least the last several weeks of that period were probably influenced by news about the then-new Covid-19 epidemic which caused many people to stock up on supplies.
+
+```{r out.width = '95%', echo=FALSE, message=FALSE }
+
+# Time series by day
+all %>%
+  select(-raw) %>%
+  group_by(date) %>%
+  summarize(count = n()) %>% 
+  #filter( count < 4)
+  ggplot(aes(date, count)) +
+  geom_point() +
+  geom_smooth() +
+  scale_color_brewer(palette="Set1") +
+  theme(legend.position = 'bottom') + 
+  labs(x = 'Date', y = "Number of shoppers", color='Shopper type')
+```
+
+### Shoppers per day, by type
+
+Meanwhile, if we break out this data to illustrate the two types of shoppers in our data (GHFC members, and PSFC members), we see two similarly consistent patterns, with GHFC members representing between 3x and 4x the number of PSFC shoppers. 
+
+```{r out.width = '95%', echo=FALSE, message=FALSE }
+
+# Time series by day
+all %>%
+  select(-raw) %>%
+  mutate(kind = if_else(str_detect(message, 'PSFC') == TRUE, 'PSFC', 'GHFC')) %>%
+  #mutate(hour = hour(time),
+         #weekday = wday(timestamp, label = TRUE)) %>%
+  #filter(hour > 9.5, hour < 22) %>%
+  group_by(date, kind) %>%
+  summarize(count = n()) %>%
+  ggplot(aes(date, count, color = kind)) +
+  geom_point() +
+  geom_smooth() +
+  scale_color_brewer(palette="Set1") +
+  theme(legend.position = 'bottom') + 
+  labs(x = 'Date', y = "Number of shoppers", color='Shopper type')
+```
+
+## Average shoppers by day of the week
+
+We can also look at the same data broken out by day of the week. Throughout the entire year, Sundays are consistently the highest traffic shopping days, while Fridays are the lowest traffic, and this holds across shopper types.
+
+```{r out.width = '95%', echo=FALSE}
+# By day of the week
+
+all %>%
+  select(-raw) %>%
+  mutate(kind = if_else(str_detect(message, 'PSFC') == TRUE, 'PSFC', 'GHFC')) %>%
+  mutate(weekday = wday(timestamp, label = TRUE, week_start = 1)) %>%
+  group_by(date, kind) %>%
+  mutate(kind_count = n()) %>%
+  ungroup() %>%
+  group_by(weekday, kind) %>%
+  summarize(kind_avg = mean(kind_count)) %>%
+  ggplot(aes(weekday, kind_avg, fill = kind))+
+  geom_bar(stat="identity", position = "dodge") + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = 'bottom') +
+  labs(x = 'Day of the week', y = "Average number of shoppers", fill='Shopper type')
+
+  
+
+```
+
+## Average shoppers by day of the week and hour of the day
+
+Finally, we can break down this data even further to look at hours within each given day. 6pm (18 on the figure below) is consistently the most popular shopping time on weekdays, while mid- to late-afternoon is consitently the most popular shopping time on weekends.
+
+```{r out.width = '95%', echo=FALSE, message=FALSE, warning=FALSE }
+#by hour
+
+all %>%
+  select(-raw) %>%
+  mutate(kind = if_else(str_detect(message, 'PSFC') == TRUE, 'PSFC', 'GHFC')) %>%
+  mutate(hour = hour(time),
+         weekday = wday(timestamp, label = TRUE, week_start = 1)) %>%
+  filter(hour > 9.5, hour < 22) %>%
+  group_by(hour, date, kind) %>%
+  mutate(kind_hour_count = n()) %>%
+  ungroup() %>%
+  group_by(kind, weekday, hour) %>%
+  summarize(hour_avg = mean(kind_hour_count)) %>%
+  ggplot(aes(hour, hour_avg, fill = kind))+
+  geom_bar(stat="identity", position = "dodge") +
+  facet_wrap(~weekday, ncol=5, scales = 'free')+
+  scale_x_continuous(limits=c(9,21)) + scale_y_continuous(limits=c(0,12.5)) +
+    scale_fill_brewer(palette="Set1") +
+  theme(legend.position = 'bottom') +
+  labs(x = 'Hour of the day', y = "Average number of shoppers", fill='Visitor type')
+```
