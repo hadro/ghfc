@@ -1,0 +1,129 @@
+---
+title: "GHFC Co-op Reopening Checkin Desk Analysis"
+author: "Josh Hadro"
+date: "2020-06-15"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lubridate)
+
+df = read_csv('../logs/reopening.csv')
+
+
+df <- df %>%
+  mutate(round = round_date(df$checkin_dt, "30 seconds")) %>%
+  group_by(round, checkin_mode, checkin_type) %>%
+  ungroup() %>%
+  distinct(round, checkin_mode, checkin_type, .keep_all = TRUE) %>%
+  select(-round)
+
+
+all = df %>%
+  filter(checkin_dt > '2020-06-05')
+
+
+```
+
+## Analysis of Greene Hill Co-op by Check-in Type
+
+The Co-op has recently reinstated its check-in procedure. As part of the IT group's work to revise the check-in application, we're able to capture a lot more usable data for analysis of who is coming into the store and when.
+
+Unfortunately, this data practice has only been in place for 11 days, but I'm able to provide a preliminary analysis based on what we have so far.
+
+(See the previous report [("GHFC Co-op Checkin Desk Analysis")](https://hadro.github.io/ghfc/ghfc_psfc_report) for a view into the data we were able analyze from mid-March 2019 through mid-March 2020, when the previous iteration of the check-in desk was in operation.)
+
+N.B.: this data reflects only what was captured -- put another way, if people did not check in at the check-in desk or mis-entered their data, then those statistics would not, by definition, be captured here. That said, I have no reason to believe the figures here are under-representative in any significant way. Moreover, the improved UX of the new checkin desk makes it easy to check in, and I'm confident in the few days of data we have. 
+
+## Shoppers per day
+
+The following figure shows the number of shoppers for every day for the 11 days starting June 05. Each bar represents the total number of check-ins on a single day. 
+
+Keeping in mind that the data is limited, the overall numbers appear lower than pre-pandemic; the mean across the 11 days is 41 shoppers. At this point, there's not enough daily data to draw any useful conclusions about overall trend lines, however.
+
+
+```{r out.width = '95%', echo=FALSE, message=FALSE }
+
+
+
+# # Time series by day
+# all %>%
+#   group_by(date = date(checkin_dt)) %>%
+#   #mutate(date_hour = mdy_h(checkin_dt))
+#   summarize(count = n()) %>% 
+#   ggplot(aes(date, count)) +
+#   geom_point() +
+#   geom_smooth() +
+#   scale_color_brewer(palette="Set1") +
+#   theme(legend.position = 'bottom') + 
+#   labs(x = 'Date', y = "Number of shoppers", color='Shopper type')
+
+all %>%
+  group_by(date = date(checkin_dt)) %>%
+  #mutate(date_hour = mdy_h(checkin_dt))
+  summarize(count = n()) %>% 
+  ggplot(aes(date, count)) +
+  geom_bar(stat="identity") +
+  scale_color_brewer(palette="Set1") +
+  theme(legend.position = 'bottom') + 
+  labs(x = 'Date', y = "Number of shoppers", color='Shopper type')
+
+```
+
+### Shoppers per day, by type
+
+While there are only 11 days of data available, the revised check-in system allows for more granular faceting. For example, we now capture more specifically what type of visitor each check-in is associated with.
+
+There are four possible values: 
+
+- GHFC (Greene Hill Food Co-op member)
+- PSFC (Park Slope Food Co-op member)
+- Trial member
+- Visitor
+
+The figure below shows the total shoppers per day broken out by each of these four check-in types.
+
+```{r out.width = '95%', echo=FALSE, message=FALSE }
+
+# Time series by day
+all %>%
+  group_by(date = date(checkin_dt), checkin_type) %>%
+  summarize(count = n()) %>%
+  drop_na() %>%
+  ggplot(aes(date, count, fill = checkin_type)) +
+  geom_bar(stat='identity', position = 'dodge') +
+  #geom_area(position = 'stack') +
+  #geom_smooth() +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position = 'bottom') + 
+  labs(x = 'Date', y = "Number of shoppers", color='Shopper type') +
+  facet_wrap(~checkin_type)
+
+```
+
+#### GHFC shoppers per day, by membership plan
+
+Likewise, now with the new check-in desk we can also look at how the various membership plans within the GHFC check-in type are represented over the same period.
+
+```{r out.width = '95%', echo=FALSE, message=FALSE }
+all %>%
+  group_by(date = date(checkin_dt), membership_type) %>%
+  summarize(count = n()) %>%
+  drop_na() %>%
+  ggplot(aes(date, count, fill = membership_type)) +
+  geom_bar(stat='identity', position = 'dodge') +
+  #geom_area(position = 'stack') +
+  #geom_smooth() +
+  #scale_fill_brewer(palette="Set2") +
+  theme(legend.position = 'bottom') + 
+  labs(x = 'Date', y = "Number of shoppers", color='Shopper type') +
+  facet_wrap(~fct_rev(membership_type), nrow = 2)
+```
+
+
+That's it for now -- but as always, please let me know if there's a question you'd like to investigate based on this data or any other data, and I'll be happy to take a look.
