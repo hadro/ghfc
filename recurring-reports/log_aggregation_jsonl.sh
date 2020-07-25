@@ -16,11 +16,20 @@ echo "Running RMarkdown script..."
 #				))"
 
 Rscript -e "rmarkdown::render('report.Rmd',
-                  output_file = paste('report_', Sys.Date(), 
+                  output_file = paste('./reports/report_', Sys.Date(), 
                                       '.html', sep=''))"
 
+
+				      
 # Send it via email until we get an http version set up
-echo "Sending an email now"
+#echo "Sending an email now"
 #echo "Sending the report for" $today | mailx -A report_$today.html -s "Subject" josh.hadro@gmail.com
-echo "Sending the report for" $today | mailx -s "GHFC Report for $today" -A ./report_$today.html josh.hadro@gmail.com
+#echo "Sending the report for" $today | mailx -s "GHFC Report for $today" -A ./report_$today.html josh.hadro@gmail.com
+
+# Push to git repo
+git add ./reports/report_$today.html
+git commit -m "Add report for $today"
+git push
+
+
 echo "Done!"

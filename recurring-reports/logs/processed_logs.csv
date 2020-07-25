@@ -1560,3 +1560,31 @@ checkin_dt,checkin_mode,checkin_type,can_shop,contact_id,membership_type,members
 2020-07-24 16:57:22.292894,click,psfc,True,,,,,,,,
 2020-07-24 17:14:48.773101,email,ghfc,True,3415.0,Carrot Plan,Current,2016-12-27,2016-12-27,0.0,2.42,0.0
 2020-07-24 17:42:27.771576,email,ghfc,True,5084.0,Zucchini Plan,New,2020-06-07,2020-06-07,2.58,2.67,0.0
+2020-07-24 18:08:18.383564,click,psfc,True,,,,,,,,
+2020-07-24 18:27:52.765908,email,trial,True,5951.0,,,,,,,
+2020-07-24 18:42:24.777163,barcode,ghfc,True,5028.0,Lettuce Plan,Current,2019-08-26,2020-03-06,0.0,2.67,2.58
+2020-07-24 18:47:48.779169,click,psfc,True,,,,,,,,
+2020-07-24 18:51:14.562433,email,ghfc,True,2964.0,Lettuce Plan,Current,2016-04-19,2019-06-01,0.0,2.33,2.42
+2020-07-24 18:52:53.825756,barcode,ghfc,True,4364.0,Lettuce Plan,Current,2019-02-25,2019-02-25,0.0,2.67,2.5
+2020-07-24 19:06:41.798230,email,ghfc,True,1503.0,Lettuce Plan,Current,2012-02-08,2020-01-04,0.0,2.25,7.25
+2020-07-24 19:44:25.575989,click,psfc,True,,,,,,,,
+2020-07-24 19:46:04.392480,email,ghfc,True,5505.0,Lettuce Plan,Current,2019-12-21,2019-12-21,0.0,2.67,2.58
+2020-07-24 19:47:08.866381,barcode,ghfc,True,3898.0,Carrot Plan,Current,2019-02-03,2019-02-03,0.0,0.0,2.5
+2020-07-25 10:00:36.039560,click,psfc,True,,,,,,,,
+2020-07-25 10:22:06.693620,click,psfc,True,,,,,,,,
+2020-07-25 10:32:06.943114,click,psfc,True,,,,,,,,
+2020-07-25 11:06:06.191312,click,psfc,True,,,,,,,,
+2020-07-25 11:25:17.003919,email,visitor,True,,,,,,,,
+2020-07-25 11:33:36.652496,email,ghfc,True,2665.0,Lettuce Plan,Current,2014-08-06,2014-08-06,0.0,1.92,3.67
+2020-07-25 11:42:08.073919,email,ghfc,True,5340.0,Carrot Plan,Current,2019-11-14,2019-11-14,0.0,0.0,2.08
+2020-07-25 11:46:17.243183,email,ghfc,True,1524.0,Zucchini Plan,New,2020-07-24,2020-07-24,,,
+2020-07-25 11:53:27.976415,email,ghfc,True,5950.0,Zucchini Plan,New,2020-07-23,2020-07-23,,,
+2020-07-25 11:59:21.528084,click,psfc,True,,,,,,,,
+2020-07-25 12:06:13.850284,barcode,ghfc,True,5204.0,Lettuce Plan,Current,2019-11-02,2019-11-02,0.0,2.75,1.08
+2020-07-25 12:20:52.215324,click,psfc,True,,,,,,,,
+2020-07-25 12:46:30.628477,email,trial,True,5909.0,,,,,,,
+2020-07-25 13:00:26.511477,email,ghfc,True,705.0,Carrot Plan,Current,2018-12-29,2019-10-14,0.0,2.83,5.5
+2020-07-25 13:06:29.222439,barcode,ghfc,True,5713.0,Zucchini Plan,New,2020-06-12,2020-06-12,2.5,0.0,0.0
+2020-07-25 13:06:32.001169,barcode,ghfc,True,5713.0,Zucchini Plan,New,2020-06-12,2020-06-12,2.5,0.0,0.0
+2020-07-25 13:16:18.382053,barcode,ghfc,True,4621.0,Lettuce Plan,Current,2019-04-05,2019-05-22,2.58,1.0,1.0
+2020-07-25 13:19:52.641289,email,ghfc,True,5042.0,Carrot Plan,Care Giving Leave,2019-07-23,2020-05-18,,,
