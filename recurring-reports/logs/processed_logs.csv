@@ -1644,3 +1644,5 @@ checkin_dt,checkin_mode,checkin_type,can_shop,contact_id,membership_type,members
 2020-07-26 15:16:28.275402,email,ghfc,True,3958.0,Lettuce Plan,Current,2018-08-19,2018-08-19,0.0,2.58,2.25
 2020-07-26 15:17:57.016853,email,ghfc,True,444.0,Lettuce Plan,Current,2019-02-03,2020-01-09,2.5,2.5,2.58
 2020-07-26 15:23:40.662330,email,visitor,True,,,,,,,,
+2020-07-26 16:03:48.438836,email,trial,True,5890.0,,,,,,,
+2020-07-26 16:09:13.097057,email,ghfc,True,3124.0,Carrot Plan,Current,2016-09-10,2016-09-10,0.0,2.67,2.67

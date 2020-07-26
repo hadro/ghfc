@@ -1,6 +1,8 @@
 today=`date +%Y-%m-%d`
 echo $today
 
+HOME=/home/hadro/
+
 cd /home/hadro/ghfc/recurring-reports/
 
 # Download the log files from the GHFC server
