@@ -34,7 +34,7 @@ rounded <- df %>%
 
 all = rounded %>%
   filter(checkin_dt > '2020-06-05', # Exclude sketchy first 1.5 days of data collection while bugs were being worked out
-         checkin_dt < today() # Exclude an incomplete day
+         #checkin_dt < today() # Exclude an incomplete day
          ) %>%
   mutate(weekday = wday(checkin_dt, label = TRUE, week_start = getOption("lubridate.week.start", 1)))
 
