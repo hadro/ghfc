@@ -138,7 +138,7 @@ all %>%
   #scale_y_continuous(labels=scales::percent)+
   scale_fill_brewer(palette="Set1") +
   theme(legend.position = 'bottom') + 
-  labs(x = 'Completed Week of the Year (#)', y = "Number of shoppers", fill='Checkin type') +
+  labs(x = 'Week of the Year (#)', y = "Number of shoppers", fill='Checkin type') +
   geom_text(aes( x = week,
                  y = week_type_ct, 
     label=scales::percent(pct, accuracy = 1)
