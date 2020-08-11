@@ -118,51 +118,33 @@ all %>%
 all %>%
   group_by(week = week(checkin_dt), checkin_type) %>%
   filter(n_distinct(weekday) >= 5) %>%
-  mutate(week_type_ct = n()#, 
-  #        week_start = floor_date(checkin_dt, unit = "week", week_start = getOption("lubridate.week.start", 1)),
-  #        week_label = case_when(
-  #          week_start == date('2020-06-01') ~ "Week of June 1",
-  #          week_start == date('2020-06-08') ~ "Week of June 8",
-  #          week_start == date('2020-06-15') ~ "Week of June 15",
-  #          week_start == date('2020-06-22') ~ "Week of June 22",
-  #          week_start == date('2020-06-29') ~ "Week of June 29",
-  #          week_start == date('2020-07-06') ~ "Week of July 6",
-  #          week_start == date('2020-07-13') ~ "Week of July 13"
-  #       )
-) %>%
+  #select(-checkin_mode, -can_shop, -membership_status, -membership_start_date) %>%
+  mutate(week_type_ct = n(), 
+                 week_start = floor_date(checkin_dt, unit = "week", week_start = getOption("lubridate.week.start", 3)),
+                 week_label = format(week_start, format=paste("Week of ", '%b %e'))
+           ) %>%
   ungroup() %>%
-  group_by(week) %>%
+  group_by(week_label) %>%
   mutate(pct = (week_type_ct / n())) %>%
-  ggplot(aes(x = week, group = checkin_type, fill = checkin_type)) +  
+  ggplot(aes(x = reorder(week_label, week), group = checkin_type, fill = checkin_type)) +  
   geom_bar(aes(y = week_type_ct), position="dodge", stat = "identity")+
   #scale_y_continuous(labels=scales::percent)+
   scale_fill_brewer(palette="Set1") +
   theme(legend.position = 'bottom') + 
-  labs(x = 'Week of the Year (#)', y = "Number of shoppers", fill='Checkin type') +
-  geom_text(aes( x = week,
+  labs(x = 'Week of the Year', y = "Number of shoppers", fill='Checkin type') +
+  geom_text(aes( x = reorder(week_label, week),
                  y = week_type_ct, 
-    label=scales::percent(pct, accuracy = 1)
-    ),
-    check_overlap = TRUE,
-    stat= "identity",
-    vjust = -.3,
-           #size = 5,
-           position = position_dodge(width = 0.9)
-            ) #+
-  # scale_x_continuous(breaks=c(23, 24, 25,26,27, 28),
-        # labels=c(
-        #    "Week of June 1",
-        #    "Week of June 8",
-        #    "Week of June 15",
-        #    "Week of June 22 \n Incomplete data",
-        #    "Week of June 29 \n Incomplete data",
-        #    "Week of July 6"
-        #   )
-        #)
-```
+                 label=scales::percent(pct, accuracy = 1)
+  ),
+  check_overlap = TRUE,
+  stat= "identity",
+  vjust = -.3,
+  size = 2.5,
+  position = position_dodge(width = 0.9)
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
 
 ```
-
 
 
 #### GHFC shoppers per day, by checkin type
@@ -172,6 +154,7 @@ To give you a sense of relative daily numbers, the figure below shows the total 
 ```{r out.width = '95%', echo=FALSE, message=FALSE }
 
 # Time series by day
+
 all %>%
   group_by(date = date(checkin_dt), checkin_type) %>%
   summarize(count = n()) %>%
@@ -210,6 +193,3 @@ all %>%
 
 
 That's it for now -- but as always, please let me know if there's a question you'd like to investigate based on this data or any other data, and I'll be happy to take a look.
-
-
-
