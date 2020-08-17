@@ -117,7 +117,7 @@ all %>%
 
 all %>%
   group_by(week = week(checkin_dt), checkin_type) %>%
-  filter(n_distinct(weekday) >= 5) %>%
+  #filter(n_distinct(weekday) >= 5) %>%
   #select(-checkin_mode, -can_shop, -membership_status, -membership_start_date) %>%
   mutate(week_type_ct = n(), 
                  week_start = floor_date(checkin_dt, unit = "week", week_start = getOption("lubridate.week.start", 3)),
