@@ -85,10 +85,6 @@ There are four possible values:
 - Trial member
 - Visitor
 
-In the figure that follows, you can see that the number of GHFC, PSFC, and visitor shoppers increased over the last week.
-The percentages indicate the percent of that type of shopper during that week. Note that the percentages are specific to a given week period only, and so cannot be compared across weeks (the raw value -- the height of the bar -- can be compared across weeks).
-Only complete weeks are shown here.
-
 
 ### Proportions of shopper types
 
